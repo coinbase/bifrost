@@ -42,7 +42,7 @@ func Test_Unsuccessful_Bad_Input(t *testing.T) {
 	exec, err := stateMachine.Execute(`{"input": "bad"}`)
 
 	assert.Error(t, err)
-	assert.Regexp(t, "BadReleaseError", exec.LastOutputJSON)
+	assert.Regexp(t, "UnmarshalError", exec.LastOutputJSON)
 
 	assert.Equal(t, []string{
 		"Validate",

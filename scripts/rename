@@ -1,0 +1,56 @@
+#!/bin/bash
+# This script is used to rename the project files and values to be used in a new project
+
+# Error if current directory is "bifrost"
+
+DIR=$(basename `pwd`)
+if [ "$DIR" = "bifrost" ]
+then 
+  echo "CANNOT RENAME BIFROST"
+  exit 1
+fi
+
+# error if directory is not the deployer
+if [ "$DIR" != "$DEPLOYER" ]
+then 
+  echo "MUST BE IN THE DEPLOYER DIR"
+  exit 1
+fi
+
+# Error if $DEPLOYER is not set
+
+if [ -z "$DEPLOYER" ]
+then 
+  echo "DEPLOYER must be set to the name of the deployer"
+  exit 1
+fi
+
+# Error if $ORG is not set
+
+if [ -z "$ORG" ]
+then 
+  echo "ORG must be set to the organisation of the deployer"
+  exit 1
+fi
+
+# Remove potential executables
+if [ -e "bifrost" ]; then rm bifrost; fi
+if [ -e "$DEPLOYER" ]; then rm $DEPLOYER; fi
+if [ -e "tmp" ]; then rm -rf tmp; fi
+
+# Remove GIT
+rm -rf .git
+mv bifrost.go $DEPLOYER.go
+
+# replace strings
+IGNORES="Gopkg\|rename"
+grep -rl coinbase/bifrost . | grep -v -e $IGNORES | xargs sed -i '' "s/coinbase\/bifrost/$ORG\/$DEPLOYER/g"
+grep -rl coinbase-bifrost . | grep -v -e $IGNORES | xargs sed -i '' "s/coinbase\-bifrost/$ORG\-$DEPLOYER/g"
+
+grep -rl "'bifrost'" .      | grep -v -e $IGNORES | xargs sed -i '' "s/'bifrost'/'$DEPLOYER'/g"
+grep -rl "\"bifrost\"" .    | grep -v -e $IGNORES | xargs sed -i '' "s/\"bifrost\"/\"$DEPLOYER\"/g"
+
+grep -rl "bifrost json" .   | grep -v -e $IGNORES | xargs sed -i '' "s/bifrost json/$DEPLOYER json/g"
+
+
+

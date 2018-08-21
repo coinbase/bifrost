@@ -1,0 +1,9 @@
+#cloud-config
+repo_update: true
+repo_upgrade: all
+
+packages:
+ - docker.io
+
+runcmd:
+ - docker run -d --restart always --name test_server -p 8000:80 nginx

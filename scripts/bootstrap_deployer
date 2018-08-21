@@ -1,0 +1,20 @@
+#!/bin/bash
+# bootstrap bifrost
+# assume-role to the correct account
+set -e
+
+go build . # Build for your operating system
+go install
+
+# Build linux lambda for upload
+./scripts/build_lambda_zip
+
+
+step bootstrap                         \
+  -lambda "coinbase-bifrost" \
+  -step "coinbase-bifrost"   \
+  -states "$(bifrost json)"\
+  -project "coinbase/bifrost"\
+  -config "development"
+
+rm lambda.zip

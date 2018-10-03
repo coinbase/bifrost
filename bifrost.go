@@ -30,7 +30,7 @@ func main() {
 
 	switch command {
 	case "json":
-		// This is required to use the step to deploy
+		// This is used to bootstrap the state-machine
 		run.JSON(deployer.StateMachine())
 	case "deploy":
 		// Send Configuration to the deployer

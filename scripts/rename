@@ -52,5 +52,4 @@ grep -rl "\"bifrost\"" .    | grep -v -e $IGNORES | xargs sed -i '' "s/\"bifrost
 
 grep -rl "bifrost json" .   | grep -v -e $IGNORES | xargs sed -i '' "s/bifrost json/$DEPLOYER json/g"
 
-
-
+grep -rl "coinbase" ./resources   | grep -v -e $IGNORES | xargs sed -i '' "s/coinbase/$ORG/g"

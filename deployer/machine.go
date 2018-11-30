@@ -171,31 +171,14 @@ func StateMachine() (*machine.StateMachine, error) {
   }`))
 }
 
-// StateMachineWithTaskHandlers returns
-func StateMachineWithTaskHandlers(tfs *handler.TaskFunctions) (*machine.StateMachine, error) {
-	stateMachine, err := StateMachine()
-	if err != nil {
-		return nil, err
-	}
-
-	for name, smhandler := range *tfs {
-		if err := stateMachine.SetResourceFunction(name, smhandler); err != nil {
-			return nil, err
-		}
-
-	}
-
-	return stateMachine, nil
+// TaskHandlers returns
+func TaskHandlers() *handler.TaskHandlers {
+	return CreateTaskHandlers(&aws.ClientsStr{})
 }
 
-// TaskFunctions returns
-func TaskFunctions() *handler.TaskFunctions {
-	return CreateTaskFunctinons(&aws.ClientsStr{})
-}
-
-// CreateTaskFunctinons returns
-func CreateTaskFunctinons(awsc aws.Clients) *handler.TaskFunctions {
-	tm := handler.TaskFunctions{}
+// CreateTaskHandlers returns
+func CreateTaskHandlers(awsc aws.Clients) *handler.TaskHandlers {
+	tm := handler.TaskHandlers{}
 	tm["Validate"] = Validate(awsc)
 	tm["Lock"] = Lock(awsc)
 	tm["ValidateResources"] = ValidateResources(awsc)

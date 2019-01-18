@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// Test_Release_Basic_Fuzz 
+// Test_Release_Basic_Fuzz
 func Test_Release_Basic_Fuzz(t *testing.T) {
 	for i := 0; i < 50; i++ {
 		f := fuzz.New()
@@ -28,5 +28,6 @@ func assertNoPanic(t *testing.T, release *Release) {
 		assert.NotRegexp(t, "Panic", err.Error())
 	}
 
+	assert.NotNil(t, exec)
 	assert.NotRegexp(t, "Panic", exec.LastOutputJSON)
 }

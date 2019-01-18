@@ -15,6 +15,7 @@ func StateMachine() (*machine.StateMachine, error) {
       "Validate": {
         "Type": "TaskFn",
         "Comment": "Validate and Set Defaults",
+        "Resource": "arn:aws:lambda:{{aws_region}}:{{aws_account}}:function:{{lambda_name}}",
         "Next": "Lock",
         "Catch": [
           {
@@ -28,6 +29,7 @@ func StateMachine() (*machine.StateMachine, error) {
       "Lock": {
         "Type": "TaskFn",
         "Comment": "Grab Lock",
+        "Resource": "arn:aws:lambda:{{aws_region}}:{{aws_account}}:function:{{lambda_name}}",
         "Next": "ValidateResources",
         "Catch": [
           {
@@ -47,6 +49,7 @@ func StateMachine() (*machine.StateMachine, error) {
       "ValidateResources": {
         "Type": "TaskFn",
         "Comment": "ValidateResources",
+        "Resource": "arn:aws:lambda:{{aws_region}}:{{aws_account}}:function:{{lambda_name}}",
         "Next": "Deploy",
         "Catch": [
           {
@@ -60,6 +63,7 @@ func StateMachine() (*machine.StateMachine, error) {
       "Deploy": {
         "Type": "TaskFn",
         "Comment": "Upload Step-Function and Lambda",
+        "Resource": "arn:aws:lambda:{{aws_region}}:{{aws_account}}:function:{{lambda_name}}",
         "Next": "WaitForDeploy",
         "Catch": [
           {
@@ -84,6 +88,7 @@ func StateMachine() (*machine.StateMachine, error) {
       "CheckHealthy": {
         "Type": "TaskFn",
         "Comment": "Is the new deploy healthy? Should we continue checking?",
+        "Resource": "arn:aws:lambda:{{aws_region}}:{{aws_account}}:function:{{lambda_name}}",
         "Next": "Healthy?",
         "Retry": [{
           "Comment": "Do not retry on HaltError",
@@ -125,6 +130,7 @@ func StateMachine() (*machine.StateMachine, error) {
       "CleanUpFailure": {
         "Type": "TaskFn",
         "Comment": "Release the Lock and Fail",
+        "Resource": "arn:aws:lambda:{{aws_region}}:{{aws_account}}:function:{{lambda_name}}",
         "Next": "FailureClean",
         "Retry": [ {
           "Comment": "Keep trying to Release",
@@ -141,6 +147,7 @@ func StateMachine() (*machine.StateMachine, error) {
       "CleanUpSuccess": {
         "Type": "TaskFn",
         "Comment": "Release the Lock and Destroy Old instance",
+        "Resource": "arn:aws:lambda:{{aws_region}}:{{aws_account}}:function:{{lambda_name}}",
         "Next": "Success",
         "Retry": [ {
           "Comment": "Keep trying to Release",

@@ -44,7 +44,7 @@ func parseUserData(releaseFile string) (*string, error) {
 	return to.Strp(string(rawUserData)), nil
 }
 
-func releaseFromFile(releaseFile *string, region *string, accountID *string) (*deployer.Release, error) {
+func ReleaseFromFile(releaseFile *string, region *string, accountID *string) (*deployer.Release, error) {
 	release, err := parseRelease(*releaseFile)
 	if err != nil {
 		return nil, err

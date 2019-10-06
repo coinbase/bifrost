@@ -14,7 +14,7 @@ import (
 // Deploy attempts to deploy release
 func Deploy(step_fn *string, releaseFile *string) error {
 	region, accountID := to.RegionAccount()
-	release, err := releaseFromFile(releaseFile, region, accountID)
+	release, err := ReleaseFromFile(releaseFile, region, accountID)
 	if err != nil {
 		return err
 	}
@@ -22,6 +22,26 @@ func Deploy(step_fn *string, releaseFile *string) error {
 	deployerARN := to.StepArn(region, accountID, step_fn)
 
 	return deploy(&aws.ClientsStr{}, release, deployerARN)
+}
+
+func DeployS3(awsc aws.Clients, releaseFile *string) (*deployer.Release, error) {
+	region, accountID := to.RegionAccount()
+	release, err := ReleaseFromFile(releaseFile, region, accountID)
+	if err != nil {
+		return nil, err
+	}
+
+	// Uploading the Release to S3 to match SHAs
+	if err := s3.PutStruct(awsc.S3(nil, nil, nil), release.Bucket, release.ReleasePath(), release); err != nil {
+		return nil, err
+	}
+
+	// Uploading the encrypted Userdata to S3
+	if err := s3.PutSecure(awsc.S3(nil, nil, nil), release.Bucket, release.UserDataPath(), release.UserData(), kMSKey()); err != nil {
+		return nil, err
+	}
+
+	return release, nil
 }
 
 func kMSKey() *string {

@@ -38,7 +38,7 @@ func Validate(awsc aws.Clients) DeployHandler {
 }
 
 // Lock secures a lock for the release
-func Lock(awsc aws.Clients) interface{} {
+func Lock(awsc aws.Clients) DeployHandler {
 	return func(ctx context.Context, release *Release) (*Release, error) {
 		// returns LockExistsError, LockError
 		return release, release.GrabLock(awsc.S3(nil, nil, nil))
@@ -46,7 +46,7 @@ func Lock(awsc aws.Clients) interface{} {
 }
 
 // ValidateResources calls to AWS to make sure all references resources exist
-func ValidateResources(awsc aws.Clients) interface{} {
+func ValidateResources(awsc aws.Clients) DeployHandler {
 	return func(ctx context.Context, release *Release) (*Release, error) {
 
 		if err := release.ValidateResources(awsc.EC2(release.AwsRegion, release.AwsAccountID, assumedRole)); err != nil {
